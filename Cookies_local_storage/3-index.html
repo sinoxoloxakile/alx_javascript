@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+</head>
+<body>
+    <script src="3-script.js"></script>
+</body>
+</html>
+function showForm() {
+    const welcomeMessage = document.getElementById('welcome-message');
+    if (welcomeMessage) {
+        welcomeMessage.remove();
+    }
+
+    const form = `
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button id="login-button">Login</button>
+        </div>
+        function showForm() {
+            const welcomeMessage = document.getElementById('welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+        
+            const form = `
+                <div id="login-form">
+                    <h2>Login</h2>
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button id="login-button">Login</button>
+                </div>
+            `;
+        
+            document.body.insertAdjacentHTML('beforeend', form);
+        }
+        
+        function hideForm() {
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.style.display = 'none';
+            }
+        }
+        
+        function deleteCookiesAndShowForm() {
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+        
+            showForm();
+        }
+        
+        function showWelcomeMessageOrForm() {
+            const isLoggedIn = getCookie('isLoggedIn');
+        
+            if (isLoggedIn === 'true') {
+                const welcomeMessage = `
+                    <h1 id="welcome-message">
+                        Welcome ${getCookie('firstName')} 
+                        <a id="logout" href="#">(logout)</a>
+                    </h1>
+                `;
+        
+                document.body.insertAdjacentHTML('beforeend', welcomeMessage);
+        
+                document.getElementById('logout').addEventListener('click', function() {
+                    deleteCookiesAndShowForm();
+                    document.getElementById('welcome-message').remove();
+                });
+            } else {
+                showForm();
+            }
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            const cookies = document.cookie.split(';');
+            cookies.forEach(function(cookie) {
+                const cookieName = cookie.substr(0, cookie.indexOf('=')).trim();
+                if (cookieName === name) {
+                    cookieValue = decodeURIComponent(cookie.substr(cookie.indexOf('=') + 1));
+                }
+            });
+            return cookieValue;
+        }
+        
+        showWelcomeMessageOrForm();
